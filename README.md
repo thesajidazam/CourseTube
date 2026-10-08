@@ -143,7 +143,7 @@ CourseTube is a content script with no backend. It re-homes YouTube's real playe
 </details>
 
 <details>
-<summary><b>Firefox</b></summary>
+<summary><b>Firefox / Zen</b></summary>
 
 1. Download or clone this repo, then copy `extension/manifest.firefox.json` over `extension/manifest.json` (or run `./build.sh` and use `dist/firefox`).
 2. Open `about:debugging#/runtime/this-firefox`.
