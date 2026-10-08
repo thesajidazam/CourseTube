@@ -8,8 +8,8 @@ _Last updated: October 2026_
 On YouTube course playlists, the extension replaces the page with a study layout. It reads the page (playlist, video title, playback position) and, to generate notes and answer questions, uses YouTube's own "Ask" feature in your browser.
 
 ## Data stored on your device
-- Generated notes, saved per video in your browser's extension storage so they load instantly next time.
-- A small per-playlist flag (course / not a course) in the page's local storage.
+- Generated notes and quiz questions, saved per video in your browser's extension storage so they load instantly next time.
+- Small preferences in the page's local storage: a per-playlist flag (course / not a course), the colour theme per lecture, and whether the notes panel is collapsed.
 
 This data never leaves your browser through the extension. Uninstalling the extension removes the notes; clearing site data removes the flags.
 

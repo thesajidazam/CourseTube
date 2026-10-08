@@ -5,7 +5,7 @@
 <h1>CourseTube</h1>
 
 <p><b>Turn any YouTube course playlist into a calm, distraction-free study space.</b><br>
-Instant AI notes · Ask questions about the exact moment you're watching · One-click lecture hopping</p>
+Instant AI notes · Quizzes that unlock as you learn · Ask about the exact moment you're watching · One-click lecture hopping</p>
 
 <p>
 <img src="https://img.shields.io/badge/Chrome-supported-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Chrome">
@@ -40,7 +40,7 @@ Open a lecture playlist and study mode switches on automatically. Not a course? 
 The whole syllabus with thumbnails and durations. Jump lectures in one click, with a smooth crossfade between videos and no flash of YouTube's interface.
 
 ### 🎛️ A player that gets out of the way
-Big rounded video, a silky seek bar with hover timestamps, controls that fade while you watch, and a **📸 screenshot button** that saves *and* copies the current frame.
+Big rounded video, a silky seek bar with chapter dividers, the current chapter title and hover timestamps, controls that fade while you watch, and a **📸 screenshot button** that saves *and* copies the current frame.
 
 </td>
 <td width="44%" align="center">
@@ -53,8 +53,24 @@ Big rounded video, a silky seek bar with hover timestamps, controls that fade wh
 The moment a lecture starts playing, CourseTube asks Gemini (through YouTube's own **Ask** panel) for detailed study notes: overview, sections, definitions, examples, key takeaways and self-test questions. Every timestamp is a **clickable chip** that jumps the video to that moment, and notes are cached so they're instant next time.
 
 <div align="center">
-<img src="assets/notes.png" alt="Generated study notes with clickable timestamps" width="92%">
+<img src="assets/notes-quiz.png" alt="Study notes next to the quiz panel" width="100%">
 </div>
+
+<br>
+
+<table>
+<tr>
+<td width="55%" valign="top">
+
+### 🧠 Quiz time!
+At **75%** of the lecture, CourseTube asks Gemini for five multiple-choice questions on what you've covered. Tap an answer and you instantly see ✓ right or ✕ wrong, plus a short explanation right underneath, then move on to the next one and finish with your score. Until then, kind words keep you going. The notes panel beside it folds away whenever you want more room.
+
+</td>
+<td width="45%" align="center">
+<img src="assets/quiz.png" alt="Quiz panel" width="100%">
+</td>
+</tr>
+</table>
 
 <br>
 
@@ -75,6 +91,22 @@ No accounts, no analytics, no servers. Notes live in your browser's local storag
 </tr>
 </table>
 
+## 🆕 What's new
+
+**1.6**
+
+- **🧠 The quiz now arrives at 75%** of the lecture, so it covers what you've actually learned.
+- **💬 Kind words along the way.** Until the quiz unlocks, an encouraging message appears where the "Quiz time!" heading will be and changes every so often as you pass milestones.
+
+**1.5**
+
+- **🧠 Quiz time!** At 75% of a lecture, CourseTube asks Gemini for five multiple-choice questions on what you've covered. Tap an answer to see ✓ right / ✕ wrong instantly, with a short explanation right below, then move to the next question and finish with your score.
+- **🎨 Colours that follow the lecture.** The background, text and Ask box take their colour from the video (using YouTube's own description-box colour, with a video-frame fallback) and glide smoothly from lecture to lecture.
+- **📍 Chapters on the seek bar.** Chapter dividers appear on the progress bar and hovering shows the chapter title.
+- **🗂️ Collapsible notes**, sitting beside the quiz, and your choice is remembered.
+- **⚡ Faster everywhere:** the study UI is pre-built while the page loads, the Ask panel is warmed up before the first request, the playlist only re-renders when it changes, and the seek bar uses GPU transforms.
+- The **Questions?** heading now sits flush with the right edge of the chat panel, and there's a new logo, cut out and tinted in the lecture's colour.
+
 ## ⚙️ How it works
 
 ```mermaid
@@ -85,6 +117,8 @@ flowchart LR
     C --> E[Lecture plays]
     E --> F[Notes requested via YouTube's Ask panel]
     F --> G[Notes rendered below the player]
+    E --> K[At 75% a quiz is generated]
+    K --> L[Tap an answer: right or wrong plus why]
     C --> H[You type a question]
     H --> I[Question + current timestamp sent to Ask]
     I --> J[Answer appears in the Questions panel]
@@ -148,6 +182,7 @@ coursetube/
 
 - Transcript + your own Gemini API key as a fallback when Ask isn't available
 - Export notes to Markdown / PDF
+- Spaced-repetition review of the quiz questions you missed
 - Per-lecture bookmarks and highlights
 - Keyboard shortcuts and a light theme
 
