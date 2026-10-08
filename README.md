@@ -95,7 +95,6 @@ No accounts, no analytics, no servers. Notes live in your browser's local storag
 
 **1.6**
 
-- **🧠 The quiz now arrives at 75%** of the lecture, so it covers what you've actually learned.
 - **💬 Kind words along the way.** Until the quiz unlocks, an encouraging message appears where the "Quiz time!" heading will be and changes every so often as you pass milestones.
 
 **1.5**
@@ -128,9 +127,11 @@ CourseTube is a content script with no backend. It re-homes YouTube's real playe
 
 ## 🚀 Install
 
-**Store versions:** Chrome Web Store · Firefox Add-ons *(links coming soon)*
+**Store versions:** 
+· Chrome Web Store *(link coming soon)*
+· [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/coursetube)
 
-**From source (works today):**
+**From source:**
 
 <details>
 <summary><b>Chrome / Edge / Brave</b></summary>
@@ -183,8 +184,7 @@ coursetube/
 - Transcript + your own Gemini API key as a fallback when Ask isn't available
 - Export notes to Markdown / PDF
 - Spaced-repetition review of the quiz questions you missed
-- Per-lecture bookmarks and highlights
-- Keyboard shortcuts and a light theme
+- Keyboard shortcuts
 
 ## 🤝 Contributing
 
