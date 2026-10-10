@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "CourseTube",
-  "version": "1.6.0",
-  "description": "Turns course playlists into a focused study view with AI notes, chapters, quizzes and in-context Q&A.",
+  "version": "2.2.2",
+  "description": "A calm, full-screen study mode for course playlists: AI notes, chapters, quizzes, Q&A and a friendly study buddy.",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
