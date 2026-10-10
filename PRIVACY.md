@@ -9,7 +9,7 @@ On YouTube course playlists, the extension replaces the page with a study layout
 
 ## Data stored on your device
 - Generated notes and quiz questions, saved per video in your browser's extension storage so they load instantly next time.
-- Small preferences in the page's local storage: a per-playlist flag (course / not a course), the colour theme per lecture, and whether the notes panel is collapsed.
+- Small preferences in the page's local storage: a per-playlist flag (course / not a course), the colour theme per lecture, whether the notes panel is collapsed, and whether you've seen the welcome tour.
 
 This data never leaves your browser through the extension. Uninstalling the extension removes the notes; clearing site data removes the flags.
 
