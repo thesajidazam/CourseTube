@@ -154,7 +154,7 @@ CourseTube is a content script with no backend. It re-homes YouTube's real playe
 
 ## 🚀 Install
 
-**Store versions:** Chrome Web Store · (Firefox Add-ons)[https://addons.mozilla.org/en-US/firefox/addon/coursetube]
+**Store versions:** Chrome Web Store · [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/coursetube)
 
 **From source (works today):**
 
