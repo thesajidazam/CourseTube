@@ -35,8 +35,6 @@ Open a lecture playlist and study mode switches on automatically. Only playlists
 ### 🎛️ A full-screen player that gets out of the way
 The lecture fills the window and everything else stays quiet until you need it. The bars around the video glow with the lecture's colour instead of black, and the whole screen keeps that one colour for the entire lecture, with chapter dividers, the current chapter title and hover timestamps. Controls fade while you watch, and a **📸 screenshot button** saves *and* copies the current frame. The little logo in the corner shows the lecture title when you hover it and cheers you on at 25%, 50% and 75%.
 
-<div align="center"><img src="assets/hero.png" alt="The full-screen player" width="100%"></div>
-
 ### ⬅️ ➡️ Playlist and questions, one glide away
 
 <table>
@@ -156,7 +154,7 @@ CourseTube is a content script with no backend. It re-homes YouTube's real playe
 
 ## 🚀 Install
 
-**Store versions:** Chrome Web Store · Firefox Add-ons *(links coming soon)*
+**Store versions:** Chrome Web Store · (Firefox Add-ons)[https://addons.mozilla.org/en-US/firefox/addon/coursetube]
 
 **From source (works today):**
 
@@ -170,7 +168,7 @@ CourseTube is a content script with no backend. It re-homes YouTube's real playe
 </details>
 
 <details>
-<summary><b>Firefox</b></summary>
+<summary><b>Firefox / Zen</b></summary>
 
 1. Download or clone this repo, then copy `extension/manifest.firefox.json` over `extension/manifest.json` (or run `./build.sh` and use `dist/firefox`).
 2. Open `about:debugging#/runtime/this-firefox`.
