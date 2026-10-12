@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.0
+- **Fixed:** playlists used with earlier versions not starting study mode. The "I left study mode" flag lived in the tab's sessionStorage and survived reloads and restored sessions (reinstalling or clearing history did not touch it). It is now in memory only, so it lasts until the page reloads; old flags are removed on startup.
+- **New:** toolbar popup (on / off / automatic per playlist, remembered), with the same Alt+Shift+S shortcut.
+- **New:** a "Study mode" chip appears for a few seconds on borderline playlists (some study evidence, no music/gaming/vlog signals).
+- **Changed:** a "not a study playlist" verdict is remembered for a day (instant, no cover next time); the first time a playlist is seen, YouTube is covered for the second it takes to judge it.
+- **Fixed:** YouTube's page (playlist panel, description, etc.) flashing while a lecture loads or changes: the page is hidden by CSS (`html.sm-act`) for the whole session, `<html>` classes are restored instantly if YouTube rewrites them, and a replaced player never leaves a stale copy in the slot. Tested: no uncovered moment across a lecture change and a player rebuild.
+- **Improved:** numbered lecture-length series ("Kanji 5: …") count as study evidence; `UU…` channel-upload lists are accepted; playlists must have a full-length id (no more `WL` / `LL` surprises).
+
 ## 2.2.2
 - **Fixed:** the dynamic colour changing several times during a lecture. One colour is now chosen per lecture (YouTube's own colour, else the video picture) and kept; the progress bar uses that same colour instead of a moving palette.
 - **Fixed:** real course playlists being ignored. Detection waits until the playlist panel has finished loading before judging, no longer remembers a negative verdict (the next lecture gets another look), and recognises more evidence: course words in other languages (Spanish, French, German, Chinese, Japanese, Korean, Russian, Hindi, Arabic and more), subject words, educational channel names, and long average video length. Music, gaming and vlog signals still veto. Earlier saved verdicts are discarded.

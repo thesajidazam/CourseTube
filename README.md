@@ -17,7 +17,7 @@ Instant AI notes · Quizzes that unlock as you learn · Ask about the exact mome
 
 <br>
 
-<img src="assets/hero.png" alt="CourseTube study mode" width="100%">
+<img src="assets/demo.gif" alt="CourseTube in motion: full-screen player, playlist and questions panels, notes and quiz, and the talking logo" width="100%">
 
 </div>
 
@@ -30,10 +30,12 @@ YouTube is a wonderful classroom and a terrible study desk: recommendations, com
 ## 🎬 Features
 
 ### 🧭 Smart course detection
-Open a lecture playlist and study mode switches on automatically. Only playlists that look like real study material qualify (course words in many languages, educational channels, lecture-length videos), so music, gaming and everyday playlists are never touched. Missed one? Press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>. <kbd>Esc</kbd> brings YouTube back.
+Open a lecture playlist and study mode switches on automatically. Only playlists that look like real study material qualify (course words in many languages, educational channels, lecture-length videos), so music, gaming and everyday playlists are never touched. Missed one? Click the CourseTube toolbar icon (or press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd>) and CourseTube remembers that playlist. <kbd>Esc</kbd> brings YouTube back until you reload.
 
 ### 🎛️ A full-screen player that gets out of the way
-The lecture fills the window and everything else stays quiet until you need it. The bars around the video glow with the lecture's colour instead of black, and the whole screen keeps that one color for the entire lecture, with chapter dividers, the current chapter title and hover timestamps. Controls fade while you watch, and a **📸 screenshot button** saves *and* copies the current frame. The little logo in the corner shows the lecture title when you hover it and cheers you on at 25%, 50% and 75%.
+The lecture fills the window and everything else stays quiet until you need it. The bars around the video glow with the lecture's colour instead of black, and the whole screen keeps that one colour for the entire lecture, with chapter dividers, the current chapter title and hover timestamps. Controls fade while you watch, and a **📸 screenshot button** saves *and* copies the current frame. The little logo in the corner shows the lecture title when you hover it and cheers you on at 25%, 50% and 75%.
+
+<div align="center"><img src="assets/hero.png" alt="The full-screen player" width="100%"></div>
 
 ### ⬅️ ➡️ Playlist and questions, one glide away
 
@@ -50,7 +52,7 @@ The lecture fills the window and everything else stays quiet until you need it. 
 </tr>
 </table>
 
-Both panels slide over a soft color blur and the video keeps playing underneath. Answers keep their formatting and include clickable timestamps, and each lecture keeps its own question history. Switching lectures fades smoothly, with no flash of YouTube's interface.
+Both panels slide over a soft colour blur and the video keeps playing underneath. Answers keep their formatting and include clickable timestamps, and each lecture keeps its own question history. Switching lectures fades smoothly, with no flash of YouTube's interface.
 
 ### 📝 Notes that write themselves
 The moment a lecture starts playing, CourseTube asks Gemini (through YouTube's own **Ask** panel) for study notes and turns them into a structured sheet: an overview, a clickable contents row, numbered sections with timestamp chips, term and definition rows, example callouts, key takeaways and self-test questions. Scroll down and they spring up over the video. Notes are cached, so they are instant next time, and the panel folds away when you want more room.
@@ -80,15 +82,30 @@ No accounts, no analytics, no servers. Notes and quiz questions live in your bro
 
 ## 🆕 What's new
 
+**2.3.0**
+
+- **Playlists you used before apply again.** Leaving study mode with ✕ or <kbd>Esc</kbd> used to be remembered for the whole browser tab, even across reloads and restored sessions, which silently kept study mode off for those playlists. It now lasts only until the page reloads, and old leftovers are cleaned up.
+- **A toolbar button to take control.** Click the CourseTube icon on any playlist page to turn study mode on, off or back to automatic for that playlist. The choice is remembered.
+- **Gentle offer on borderline playlists.** If a playlist shows some study signs but not enough, a small "Study mode" chip appears for a few seconds instead of nothing.
+- **No more YouTube flashes.** YouTube's page is now hidden at the CSS level while study mode runs, covered while a new playlist is being judged, restored instantly if YouTube rewrites the page, and a rebuilt player never leaves a stale copy behind.
+- Detection also recognises numbered lecture-length series ("Kanji 5: …") and channel-upload lists.
+
+**2.2.2**
+
+- **One colour per lecture.** The theme is chosen once when a lecture starts and then stays put, instead of drifting while you watch.
+- **Fewer missed courses.** Study-playlist detection now waits for the playlist to finish loading, never remembers a "no", and also recognises course words in other languages, subject names, educational channels and long lecture-length videos. Music, gaming and vlog playlists are still left alone.
+
 **2.2**
 
 - **Notes are now a real study sheet.** CourseTube asks Gemini for a labelled outline and builds the layout itself: overview, clickable contents, numbered sections with timestamp chips, term and definition rows, example callouts, key takeaways and self-test questions.
+- **Notes start by themselves on every lecture.** Requests that get lost when YouTube resets its Ask panel are resent automatically, with one automatic retry, so there is no need to press Regenerate.
 - **No YouTube UI during lecture changes.** The player stays hidden until the new lecture is really playing, YouTube's loading spinner is hidden, and the overlay can no longer be switched off from outside.
 - **Messages from the logo stay on a single line.**
 
 **2.1**
 
 - **A smaller, calmer logo.** Just the logo sits top-left; hover it and the lecture title floats out in a little thought-bubble pill. The encouragement messages (25%, 50%, 75% and finish, plus "notes ready" and "quiz ready") pop out in the same pill, with warmer, more expressive wording.
+- **Notes as a structured study sheet:** an overview, a clickable table of contents, numbered section cards, tidy label/value rows for definitions, a highlighted Key takeaways card and numbered self-test questions, with reading time.
 - **Springy rise.** Notes and quiz bounce up as you scroll down.
 - **A quiet arrow** under the progress bar replaces the old hint pill.
 - **Questions?** now sits at the left of the history panel, lined up with the playlist's panel.
@@ -96,22 +113,23 @@ No accounts, no analytics, no servers. Notes and quiz questions live in your bro
 
 **2.0, a complete redesign**
 
-- **🎬 Full-screen player.** The lecture fills the window; letterbox bars glow with the lecture's color instead of black.
+- **🎬 Full-screen player.** The lecture fills the window; letterbox bars glow with the lecture's colour instead of black.
 - **👋 A logo that talks.** It sits top-left and pops a thought bubble to cheer you on at 25%, 50% and 75%, and to tell you when your notes and quiz are ready.
 - **⬅️ Hover left for the playlist, ➡️ hover right for questions**, each gliding out over a soft, progressive colour blur.
-- **⬇️ Scroll down for notes and quiz.** They rise over the video while a color blur slowly takes over as you scroll.
+- **⬇️ Scroll down for notes and quiz.** They rise over the video while a colour blur slowly takes over as you scroll.
 - **🎓 Welcome tour** for first-time users (click the logo any time to replay it).
 - **🎯 Study playlists only.** Detection now needs real evidence (course words, lecture numbering, Education category) and is vetoed by music/gaming/vlog signals, so other playlists are never touched. The launcher button only appears on recognised study playlists. Missed one? Press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> on the playlist page.
-- Smoother lecture changes (fade to the ambient color, no YouTube UI splash), plus the usual speed-ups.
+- Smoother lecture changes (fade to the ambient colour, no YouTube UI splash), plus the usual speed-ups.
 
 **1.6**
 
+- **🧠 The quiz now arrives at 75%** of the lecture, so it covers what you've actually learned.
 - **💬 Kind words along the way.** Until the quiz unlocks, an encouraging message appears where the "Quiz time!" heading will be and changes every so often as you pass milestones.
 
 **1.5**
 
 - **🧠 Quiz time!** At 75% of a lecture, CourseTube asks Gemini for five multiple-choice questions on what you've covered. Tap an answer to see ✓ right / ✕ wrong instantly, with a short explanation right below, then move to the next question and finish with your score.
-- **🎨 Colous that follow the lecture.** The background, text and Ask box take their color from the video (using YouTube's own description-box color, with a video-frame fallback) and glide smoothly from lecture to lecture.
+- **🎨 Colours that follow the lecture.** The background, text and Ask box take their colour from the video (using YouTube's own description-box colour, with a video-frame fallback) and glide smoothly from lecture to lecture.
 - **📍 Chapters on the seek bar.** Chapter dividers appear on the progress bar and hovering shows the chapter title.
 - **🗂️ Collapsible notes**, sitting beside the quiz, and your choice is remembered.
 - **⚡ Faster everywhere:** the study UI is pre-built while the page loads, the Ask panel is warmed up before the first request, the playlist only re-renders when it changes, and the seek bar uses GPU transforms.
@@ -138,7 +156,7 @@ CourseTube is a content script with no backend. It re-homes YouTube's real playe
 
 ## 🚀 Install
 
-**Store versions:** Chrome Web Store · [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/coursetube)
+**Store versions:** Chrome Web Store · Firefox Add-ons *(links coming soon)*
 
 **From source (works today):**
 
@@ -152,7 +170,7 @@ CourseTube is a content script with no backend. It re-homes YouTube's real playe
 </details>
 
 <details>
-<summary><b>Firefox / Zen</b></summary>
+<summary><b>Firefox</b></summary>
 
 1. Download or clone this repo, then copy `extension/manifest.firefox.json` over `extension/manifest.json` (or run `./build.sh` and use `dist/firefox`).
 2. Open `about:debugging#/runtime/this-firefox`.
@@ -165,6 +183,12 @@ Or build store-ready zips for both browsers:
 ```bash
 ./build.sh   # → dist/coursetube-chrome.zip and dist/coursetube-firefox.zip
 ```
+
+## 🛠️ Troubleshooting
+
+- **A course playlist isn't picked up:** open a lecture from it, click the CourseTube icon in the toolbar and choose *Turn on for this playlist*. It will open in study mode from then on.
+- **Study mode is switched off for a playlist you want:** the same popup shows *Back to automatic*.
+- **Nothing happens on a video:** CourseTube only works on playlist pages (not mixes or albums).
 
 ## 🧪 Good to know
 
