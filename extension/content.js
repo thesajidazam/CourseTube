@@ -187,7 +187,7 @@ function linkify(root) { // [mm:ss] → clickable seek chips
 }
 
 /* ───────── state ───────── */
-const S = { active: false, root: null, origin: null, v: null, nv: null, drag: false, nav: 0, ch: [], chc: {}, hs: {}, pal: {}, said: new Set(), sp: 0, pane: null };
+const S = { offs: new Set(), active: false, root: null, origin: null, v: null, nv: null, drag: false, nav: 0, ch: [], chc: {}, hs: {}, pal: {}, said: new Set(), sp: 0, pane: null };
 const E = {};   // cached element refs (hot paths never re-query)
 let toastT;
 const toast = msg => { const t = $('.sm-toast') || Object.assign(document.body.appendChild(document.createElement('div')), { className: 'sm-toast' });
@@ -290,13 +290,14 @@ function autoChapters() {
 
 /* ───────── detection (study playlists only) ───────── */
 const listId = () => qs().get('list') || '';
-const onWatchList = () => location.pathname === '/watch' && /^PL/.test(listId());
+const okList = l => l.length >= 10 && !/^(RD|OLAK)/.test(l);   // real playlists (PL…, UU…, …); never mixes or albums
+const onWatchList = () => location.pathname === '/watch' && okList(listId());
 const plTitle = () => norm(($('ytd-playlist-panel-renderer .header .title') || $('ytd-playlist-panel-renderer #header-contents .title') || $('ytd-playlist-panel-renderer h3') || $('ytd-playlist-panel-renderer .title') || {}).textContent);
 const STRONG = /\b(courses?|lectures?|lessons?|tutorials?|curriculum|syllabus|bootcamp|masterclass|semester|opencourseware|exam prep|crash course|full course|curso|clase|lecci[oó]n|cours|le[cç]on|vorlesung|lektion|aula|li[cç][aã]o|lezione|corso|kelas|pelajaran|ders|kurs)\b|\b(cs|ee|math|phys|chem|bio|econ|stat|psych)\s?\d{2,3}[a-z]?\b|\b(university|mit|stanford|harvard|berkeley|nptel|khan academy|coursera|edx)\b/i;
 const STRONG_NL = /(课程|教程|讲座|講義|授業|レッスン|講座|강의|수업|강좌|курс|урок|лекци|कोर्स|पाठ|ट्यूटोरियल|कक्षा|درس|دورة|محاضرة|khóa học|bài giảng)/i;
 const MEDIUM = /\b(learn|learning|study|beginners?|fundamentals|introduction|intro to|basics|module|chapter|class|grammar|vocabulary|algebra|calculus|physics|chemistry|biology|programming|python|javascript|sql|machine learning|data structures|algorithms)\b/i;
 const EDU = /(academy|university|college|institute|school|tutor|tutorials?|lectures?|courses?|classes|education|learning|freecodecamp|crash ?course|khan|nptel|coursera|edx|ted-?ed|study|professor)/i;
-const SEQ = /\b(lecture|lesson|part|chapter|module|day|week|unit|episode|ep|class|session)\.?\s*#?\d+\b|^\s*(#|no\.?|lec\.?)\s*\d+|\bL\d+\b|^\s*\d{1,3}\s*[.):-]/i;
+const SEQ = /\b(lecture|lesson|part|chapter|module|day|week|unit|episode|ep|class|session)\.?\s*#?\d+\b|^\s*(#|no\.?|lec\.?)\s*\d+|\bL\d+\b|^\s*\d{1,3}\s*[.):-]|^[A-Za-z]{2,20}\s+#?\d{1,3}\s*[:.\-–|)]/i;
 const NEG = /\b(official (music )?video|lyrics?|lyric video|remix|feat\.?|ft\.?|soundtrack|ost|trailer|gameplay|walkthrough|let'?s play|highlights|vlog|reaction|unboxing|full album|songs?)\b/i;
 // A playlist counts as "study" only with real evidence (course words in its name or titles, an educational channel or category…).
 // Length alone never qualifies, and music / gaming / vlog signals veto it.
@@ -311,15 +312,18 @@ function courseScore() {
   const sN = titles.filter(strong).length, mN = titles.filter(t => MEDIUM.test(t)).length;
   if (sN >= 3) { s += 3; ev++; } else if (sN >= 1) { s += 1; ev++; }
   if (mN >= 3) { s += 1; ev++; }
-  if (ev && titles.filter(t => SEQ.test(t)).length >= 3) s += 1;
+  const seqN = titles.filter(t => SEQ.test(t)).length;
+  if (seqN >= 4 && avg >= 360) { s += 1; ev++; }   // numbered, lecture-length videos
+  else if (ev && seqN >= 3) s += 1;
   if (EDU.test(chan)) { s += 2; ev++; }
   if (/^Education$/i.test(genre)) { s += 2; ev++; } else if (/Science & Technology/i.test(genre)) s += 1;
   if (ev && items.length >= 5) s += 1;
   if (ev && avg >= 480) s += 1;   // lectures tend to be long
+  const veto = NEG.test(head) || titles.filter(t => NEG.test(t)).length >= 3 || /^(Music|Gaming|Entertainment|Comedy|Sports|Film & Animation|People & Blogs|Pets & Animals|Travel & Events|Autos & Vehicles)$/i.test(genre);
   if (NEG.test(head)) s -= 3;
   if (titles.filter(t => NEG.test(t)).length >= 3) s -= 3;
   if (/^(Music|Gaming|Entertainment|Comedy|Sports|Film & Animation|People & Blogs|Pets & Animals|Travel & Events|Autos & Vehicles)$/i.test(genre)) s -= 3;
-  return { ok: s >= 3 && ev > 0, s };
+  return { ok: s >= 3 && ev > 0, s, veto };
 }
 
 /* ───────── playlist ───────── */
@@ -871,6 +875,7 @@ function keep() {
   if (S.sw && (Date.now() - S.swAt > 6000 || (vid() !== S.swFrom && st() === 1 && now() > 0.7))) { S.sw = false; E.fs.classList.remove('sw'); }
   if (p && E.slot && p.parentNode !== E.slot) { // YouTube re-homed its player: adopt it again
     const was = isPlaying(); S.origin = { parent: p.parentNode, next: p.nextSibling }; E.slot.append(p);
+    [...E.slot.children].forEach(c => { if (c !== p && c.id === 'movie_player') c.remove(); });
     if (was) setTimeout(() => { try { p.playVideo(); } catch {} }, 50);
   }
   const k = S.k = (S.k || 0) + 1;
@@ -885,7 +890,7 @@ function enter() {
   build(); S.active = true;
   const v = video(), was = v && !v.paused;
   S.origin = { parent: p.parentNode, next: p.nextSibling };
-  document.body.classList.add('sm-on'); S.root.classList.add('on'); E.slot.append(p);
+  document.body.classList.add('sm-on'); html.classList.add('sm-act'); S.root.classList.add('on'); E.slot.append(p);
   if (was) v.play().catch(() => {});
   $('#sm-launch')?.classList.remove('show');
   S.nv = null; refresh();
@@ -901,9 +906,9 @@ function exit(manual) {
   if (S.wel) closeWelcome(); setPane(null); sq.length = 0;
   const p = player(), v = video(), was = v && !v.paused;
   if (p && S.origin && S.origin.parent.isConnected) S.origin.parent.insertBefore(p, S.origin.next && S.origin.next.isConnected ? S.origin.next : null);
-  document.body.classList.remove('sm-on'); S.root.classList.remove('on'); S.mo?.disconnect(); clearInterval(S.iv); S.root.scrollTop = 0;
+  document.body.classList.remove('sm-on'); html.classList.remove('sm-act'); S.root.classList.remove('on'); S.mo?.disconnect(); clearInterval(S.iv); S.root.scrollTop = 0;
   window.dispatchEvent(new Event('resize')); if (was) v.play().catch(() => {});
-  if (manual) sessionStorage.setItem('sm-off-' + listId(), '1');
+  if (manual) S.offs.add(listId());   // stays off until the page is reloaded (never survives a restart)
   launcher();
 }
 function refresh() {
@@ -928,42 +933,55 @@ function refresh() {
 }
 
 /* ───────── lifecycle ───────── */
-const lget = l => lsGet('sm-c3-' + l);   // remembered study / not-study verdict per playlist (v2 keys: old guesses are ignored)
+const lget = l => lsGet('sm-c3-' + l);   // '1' = study mode on for this playlist, '0' = switched off by you (toolbar popup)
 const lset = (l, v) => lsSet('sm-c3-' + l, v);
-const off = l => sessionStorage.getItem('sm-off-' + l);
+const ldel = k => { try { localStorage.removeItem(k); } catch {} };
+const negFresh = l => { const t = +lsGet('sm-n3-' + l); return !!t && Date.now() - t < 864e5; };   // "not a study playlist" is remembered for a day
+const off = l => S.offs.has(l);   // leaving with ✕ / Esc lasts until the page reloads
+try { for (const k of Object.keys(sessionStorage)) if (k.startsWith('sm-off-')) sessionStorage.removeItem(k); } catch {}   // old versions kept this forever
 const html = document.documentElement;
-const unveil = () => html.classList.remove('sm-pre');
-const preveil = () => { html.classList.add('sm-pre'); clearTimeout(S.vt); S.vt = setTimeout(unveil, 12000); };
-function launcher() {   // only ever offered on playlists that were recognised as study playlists
-  let b = $('#sm-launch'); const show = onWatchList() && !S.active && lget(listId()) === '1';
+const unveil = () => { S.veil = false; html.classList.remove('sm-pre'); };
+const preveil = (ms = 12000) => { S.veil = true; html.classList.add('sm-pre'); clearTimeout(S.vt); S.vt = setTimeout(unveil, ms); };
+new MutationObserver(() => {   // YouTube rewrites <html class> now and then: our covers go straight back on
+  if (S.veil && !html.classList.contains('sm-pre')) html.classList.add('sm-pre');
+  if (S.active && !html.classList.contains('sm-act')) html.classList.add('sm-act');
+}).observe(html, { attributes: true, attributeFilter: ['class'] });
+function launcher() {   // offered on recognised study playlists, and briefly on borderline ones
+  const l = listId(), v = lget(l); let b = $('#sm-launch'); const show = onWatchList() && !S.active && v !== '0' && (v === '1' || S.hint === l);
   if (!b) { if (!show) return;
     b = Object.assign(document.createElement('button'), { id: 'sm-launch', innerHTML: '<i class="sm-lg"></i>Study mode' });
-    b.onclick = () => { sessionStorage.removeItem('sm-off-' + listId()); enter(); }; document.body.append(b); }
+    b.onclick = () => { const k = listId(); S.offs.delete(k); S.hint = null; lset(k, '1'); build(); enter(); }; document.body.append(b); }
   b.classList.toggle('show', show);
 }
+const hintChip = () => { S.hint = listId(); launcher(); clearTimeout(S.hintT); S.hintT = setTimeout(() => { S.hint = null; launcher(); }, 9000); };
 async function settled(n) {   // resolves once the playlist panel has stopped loading (items and title), or after a few seconds
   const t0 = Date.now(); let last = -1, since = t0;
   for (let i = 0; i < 90; i++) {
     if (n !== S.nav || S.active) return false;
     const c = document.querySelectorAll('ytd-playlist-panel-video-renderer').length;
     if (c !== last) { last = c; since = Date.now(); }
-    if (c >= 3 && Date.now() - since > 600 && (plTitle() || Date.now() - t0 > 3000)) return true;
-    await sleep(100);
+    if (c >= 3 && Date.now() - since > 300 && (plTitle() || Date.now() - t0 > 2500)) return true;
+    await sleep(80);
   }
   return n === S.nav && !S.active;
 }
+const covered = l => !off(l) && lget(l) !== '0' && !(lget(l) !== '1' && negFresh(l));   // should YouTube be covered while we decide?
 async function onNav() {
   const n = ++S.nav; launcher();
   if (S.active) return onWatchList() ? refresh() : exit();
   const l = listId();
-  if (!onWatchList() || off(l)) return unveil();
+  if (!onWatchList() || !covered(l)) return unveil();
   if (lget(l) === '1') { preveil(); build(); }   // known study playlist: cover YouTube straight away
-  else {   // unknown: judge quietly once the playlist has loaded. A "no" is never remembered, so the next lecture gets another look
-    if (!(await settled(n)) || !courseScore().ok) return;
-    lset(l, '1'); preveil(); build();
+  else {   // first sight: cover YouTube while we judge (about a second), then take over or step aside
+    preveil(4000);
+    if (!(await settled(n))) return;
+    const r = S.last = courseScore();
+    if (!r.ok) { lsSet('sm-n3-' + l, String(Date.now())); unveil(); if (r.s >= 1 && !r.veto) hintChip(); return; }
+    lset(l, '1'); ldel('sm-n3-' + l); build();
   }
   for (let i = 0; i < 100 && !player(); i++) await sleep(100);
   if (n !== S.nav || S.active) return;
+  if (!player()) return unveil();
   enter();
 }
 window.addEventListener('yt-navigate-start', e => {
@@ -971,13 +989,13 @@ window.addEventListener('yt-navigate-start', e => {
   let u; try { u = new URL(raw, location.origin); } catch { return; }
   if (S.active) { if (u.pathname !== '/watch') exit(); else if (u.searchParams.get('v') !== vid()) startSwitch(); return; }
   const l = u.searchParams.get('list') || '';
-  if (u.pathname === '/watch' && /^PL/.test(l) && lget(l) === '1' && !off(l)) preveil();
+  if (u.pathname === '/watch' && okList(l) && covered(l)) preveil(lget(l) === '1' ? 12000 : 4000);
 });
 window.addEventListener('yt-navigate-finish', onNav);
 document.addEventListener('keydown', e => {
   if (e.altKey && e.shiftKey && e.code === 'KeyS' && onWatchList()) {   // manual switch for a study playlist we didn't recognise
     e.preventDefault(); if (S.active) return exit(true);
-    sessionStorage.removeItem('sm-off-' + listId()); lset(listId(), '1'); build(); return enter();
+    const l = listId(); S.offs.delete(l); lset(l, '1'); build(); return enter();
   }
   if (!S.active) return;
   if (S.wel) {
@@ -986,7 +1004,18 @@ document.addEventListener('keydown', e => {
   }
   if (e.key === 'Escape' && !document.fullscreenElement) { if (S.pane) setPane(null); else exit(true); }
 }, true);
+// toolbar popup: status and manual control per playlist
+if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage) chrome.runtime.onMessage.addListener((m, _s, reply) => {
+  const l = listId();
+  if (m && m.type === 'sm-status') { const v = lget(l); reply({ onList: onWatchList(), mode: v === '1' ? 'on' : v === '0' ? 'off' : 'auto', active: S.active, score: S.last ? S.last.s : null }); return; }
+  if (m && m.type === 'sm-set' && onWatchList()) {
+    if (m.mode === 'on') { lset(l, '1'); ldel('sm-n3-' + l); S.offs.delete(l); S.hint = null; build(); enter(); }
+    else if (m.mode === 'off') { lset(l, '0'); if (S.active) exit(); unveil(); }
+    else { ldel('sm-c3-' + l); ldel('sm-n3-' + l); S.offs.delete(l); }
+    launcher(); reply({ ok: true, active: S.active }); return;
+  }
+});
 applyTheme(parseTheme(lsGet('sm-theme')));   // veil already wears the last theme → no colour jump
-if (onWatchList() && lget(listId()) === '1' && !off(listId())) preveil();
+if (onWatchList() && covered(listId())) preveil(lget(listId()) === '1' ? 12000 : 4000);
 document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', onNav, { once: true }) : onNav();
 })();

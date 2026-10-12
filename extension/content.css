@@ -37,6 +37,8 @@ body.sm-on{overflow:hidden!important}
 /* nothing of YouTube's own player UI may flash: only video, subtitles, spinner, ads and errors stay visible */
 #sm-root #movie_player:not(.ytp-fullscreen)>:not(.html5-video-container):not(.ytp-caption-window-container):not(.video-ads):not(.ytp-error):not(.ytp-offline-slate){display:none!important}
 #sm-root #movie_player:not(.ytp-fullscreen) :is(.ytp-chrome-bottom,.ytp-chrome-top,.ytp-gradient-bottom,.ytp-gradient-top,.ytp-pause-overlay,.ytp-ce-element,.ytp-endscreen-content,.ytp-cards-teaser,.ytp-suggested-action,.ytp-paid-content-overlay,.ytp-watermark,.html5-endscreen,.ytp-autonav-endscreen-countdown-overlay,.ytp-autonav-endscreen-upnext-container,.ytp-upnext,.ytp-videowall-still,.ytp-large-play-button,.ytp-ce-covering-overlay,.ytp-pause-overlay-container,.ytp-iv-player-content,.ytp-spinner-message){display:none!important}
+/* while study mode runs, YouTube's own page can never show through (even if our overlay flickers) */
+html.sm-act ytd-app,html.sm-act #masthead-container{opacity:0!important;pointer-events:none!important}
 /* letterbox bars show the lecture's ambient colour, never black */
 .sm-slot #movie_player,.sm-slot .html5-video-player,.sm-slot .html5-video-container{background:transparent!important}
 

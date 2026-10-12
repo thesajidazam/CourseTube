@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CourseTube",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "A calm, full-screen study mode for course playlists: AI notes, chapters, quizzes, Q&A and a friendly study buddy.",
   "icons": {
     "16": "icons/icon16.png",
@@ -26,5 +26,14 @@
       ],
       "run_at": "document_start"
     }
-  ]
+  ],
+  "action": {
+    "default_title": "CourseTube",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png"
+    }
+  }
 }
